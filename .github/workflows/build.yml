@@ -1,0 +1,63 @@
+# name: CI Build
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id  }}
+#   cancel-in-progress: true
+# on:
+#   push:
+#   pull_request:
+#     branches:
+#     - main
+# permissions: read-all
+# jobs:
+#   trigger-codebuild:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
+
+#       # Choose your own OS and AMI
+#       #
+#       - name: Check if CodeBuild project exists
+#         id: check_project
+#         run: |
+#           PROJECT_EXISTS=$(aws codebuild list-projects | grep 'Vulkan-Loader-Test')
+#           if [ -n "$PROJECT_EXISTS" ]; then
+#             echo "Project already exists. Skipping creation."
+#             echo "::set-output name=exists::true"
+#           else
+#             echo "::set-output name=exists::false"
+#           fi
+#       - name: Build CodeBuild Project Compute Type
+#         if: steps.check_project.outputs.exists == 'false'
+#         run: |          
+#           aws codebuild create-project \
+#               --name Vulkan-Loader-Test \
+#               --source "type=GITHUB,location=https://github.com/outofcontrol/Build-Test" \
+#               --artifacts "type=S3,location=khr-github-build-artifacts,packaging=ZIP" \
+#               --environment "type=LINUX_CONTAINER,computeType=BUILD_GENERAL1_LARGE,image=aws/codebuild/standard:5.0" \
+#               --service-role arn:aws:iam::452667803910:role/service-role/codebuild-Vulka-Loader-Test-service-role
+# Choose your own OS and AMI
+#
+#       - name: Start CodeBuild
+#         id: codebuild
+#         run: |
+#           buildId=$(aws codebuild start-build \
+#             --project-name Vulkan-Loader-Test \
+#             --query 'build.id' \
+#             --output text \
+#             --environment-variables-override name=PR_NUMBER,value=${{ github.event.pull_request.number }},type=PLAINTEXT)
+#           echo "::set-output name=buildId::$buildId"
+#         env:
+#           AWS_DEFAULT_REGION: us-east-1
+#       - name: Wait for CodeBuild result
+#         run: |
+#           aws codebuild batch-get-builds --ids ${{ steps.codebuild.outputs.buildId }} --query 'builds[].buildStatus' --output text
+#         env:
+#           AWS_DEFAULT_REGION: us-east-1
