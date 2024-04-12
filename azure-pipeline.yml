@@ -22,12 +22,12 @@ steps:
     sudo sysctl vm.mmap_rnd_bits=28
   displayName: 'Install dependencies'
 
-- script: |
-    echo Installing CMake version 3.17.2
-    wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh
-    chmod +x cmake-3.17.2-Linux-x86_64.sh
-    ./cmake-3.17.2-Linux-x86_64.sh --skip-license --prefix=/usr/local
-  displayName: 'Pre-build step'
+#- script: |
+#    echo Installing CMake version 3.17.2
+#    wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh
+#    chmod +x cmake-3.17.2-Linux-x86_64.sh
+#    ./cmake-3.17.2-Linux-x86_64.sh --skip-license --prefix=/usr/local
+#  displayName: 'Pre-build step'
 
 - script: |
     cmake -S. -B build -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTS=ON -D UPDATE_DEPS=ON -D LOADER_ENABLE_ADDRESS_SANITIZER=ON -D BUILD_WERROR=ON -D CMAKE_CXX_COMPILER=clang++ -D CMAKE_C_COMPILER=clang
