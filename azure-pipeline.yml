@@ -4,55 +4,56 @@ trigger:
 jobs:
 - job: linux
   strategy:
-  matrix:
-    gcc_debug_ubuntu2004:
-      compiler.cc: gcc
-      compiler.cxx: g++
-      config: Debug
-      osVmImage: ubuntu-20.04
-    gcc_release_ubuntu2004:
-      compiler.cc: gcc
-      compiler.cxx: g++
-      config: Release
-      osVmImage: ubuntu-20.04
-    gcc_debug_ubuntu2204:
-      compiler.cc: gcc
-      compiler.cxx: g++
-      config: Debug
-      osVmImage: ubuntu-22.04
-    gcc_release_ubuntu2204:
-      compiler.cc: gcc
-      compiler.cxx: g++
-      config: Release
-      osVmImage: ubuntu-22.04
-    clang_debug_ubuntu2004:
-      compiler.cc: clang
-      compiler.cxx: clang++
-      config: Debug
-      osVmImage: ubuntu-20.04
-    clang_release_ubuntu2004:
-      compiler.cc: clang
-      compiler.cxx: clang++
-      config: Release
-      osVmImage: ubuntu-20.04
-    clang_debug_ubuntu2204:
-      compiler.cc: clang
-      compiler.cxx: clang++
-      config: Debug
-      osVmImage: ubuntu-22.04
-    clang_release_ubuntu2204:
-      compiler.cc: clang
-      compiler.cxx: clang++
-      config: Release
-      osVmImage: ubuntu-22.04
+    matrix:
+      gcc_debug_ubuntu2004:
+        compiler.cc: gcc
+        compiler.cxx: g++
+        config: Debug
+        osVmImage: ubuntu-20.04
+      gcc_release_ubuntu2004:
+        compiler.cc: gcc
+        compiler.cxx: g++
+        config: Release
+        osVmImage: ubuntu-20.04
+      gcc_debug_ubuntu2204:
+        compiler.cc: gcc
+        compiler.cxx: g++
+        config: Debug
+        osVmImage: ubuntu-22.04
+      gcc_release_ubuntu2204:
+        compiler.cc: gcc
+        compiler.cxx: g++
+        config: Release
+        osVmImage: ubuntu-22.04
+      clang_debug_ubuntu2004:
+        compiler.cc: clang
+        compiler.cxx: clang++
+        config: Debug
+        osVmImage: ubuntu-20.04
+      clang_release_ubuntu2004:
+        compiler.cc: clang
+        compiler.cxx: clang++
+        config: Release
+        osVmImage: ubuntu-20.04
+      clang_debug_ubuntu2204:
+        compiler.cc: clang
+        compiler.cxx: clang++
+        config: Debug
+        osVmImage: ubuntu-22.04
+      clang_release_ubuntu2204:
+        compiler.cc: clang
+        compiler.cxx: clang++
+        config: Release
+        osVmImage: ubuntu-22.04
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: $(osVmImage)
+
   steps:
   - checkout: self
   - script: sudo apt update && sudo apt install --yes --no-install-recommends libwayland-dev libxrandr-dev
     displayName: 'Install Dependencies'
   - script: |
-      if [ "$(os)" == "ubuntu-20.04" ]; then
+      if [ "$(osVmImage)" == "ubuntu-20.04" ]; then
         wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh
         sudo bash cmake-3.17.2-Linux-x86_64.sh --skip-license --prefix=/usr/local
       fi
