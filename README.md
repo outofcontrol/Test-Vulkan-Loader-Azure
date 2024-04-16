@@ -4,6 +4,8 @@ This project provides the Khronos official Vulkan Loader for all platforms excep
 
 ## Introduction
 
+<!-- -->
+
 Vulkan is an explicit API, enabling direct control over how GPUs actually work.
 As such, Vulkan supports systems that have multiple GPUs, each running with a different driver, or ICD (Installable Client Driver).
 Vulkan also supports multiple global contexts (instances, in Vulkan terminology).
