@@ -2,6 +2,8 @@
 
 This project provides the Khronos official Vulkan Loader for all platforms except [Android](https://android.googlesource.com/platform/frameworks/native/+/master/vulkan/)
 
+NOTE: (Jon) added a change to see how Azure works with a PR from my repo fork.
+
 ## Introduction
 
 Vulkan is an explicit API, enabling direct control over how GPUs actually work.
